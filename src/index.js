@@ -23,7 +23,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(__dirname + '/public/index.html');
   });
 }
-
 let port = process.env.PORT || 4000;
 app.listen(port, () => {
   // Prints initialization
