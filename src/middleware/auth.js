@@ -21,8 +21,16 @@ module.exports = (req, res, next) => {
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     try {
-      if (err) return res.status(401).json({ error: 'Invalid Token!' });
-
+     
+      if (err){
+        return res.status(401).json({
+          error: true,
+          message: {
+            type: 'danger',
+            value: err.message+ ' '+'Token inválido. Você não tem permissão para fazer essa requisição'
+          }
+        });
+      }
       req.userID = decoded.id;
       next();
     } catch (error) {

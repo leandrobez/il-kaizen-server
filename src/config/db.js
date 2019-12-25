@@ -4,7 +4,11 @@ const dotenv = require('dotenv');
 //initialize dotenv
 dotenv.config();
 
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, () => {
+mongoose.connect(process.env.DB_CONNECT, 
+	{ 
+		useNewUrlParser: true,
+		useUnifiedTopology: true 
+	}, () => {
   console.log(
     `*****************************\n*    DB Connection: OK    *\n*****************************\n`
   );

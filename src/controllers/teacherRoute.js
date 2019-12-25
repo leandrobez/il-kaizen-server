@@ -245,7 +245,9 @@ router.get('/show/:_id', async (req, res) => {
   try {
     const teacher = await Teacher.findById({ _id: req.params._id });
     if (teacher) {
-      return res.status(200).json({ error: null, teacher: teacher });
+      return res.status(200).json({ 
+        error: null,
+        teacher: teacher });
     } else {
       return res.status(404).json({
         error: true,
@@ -293,7 +295,9 @@ router.get('/alls', async (req, res) => {
   try {
     const teacher = await Teacher.find().sort({ name: 1 });
     if (teacher.length > 0) {
-      return res.status(200).json({ error: null, teacher: teacher });
+      return res.status(200).json({ 
+        error: null, 
+        teacher: teacher });
     } else {
       return res.json({
         error: true,

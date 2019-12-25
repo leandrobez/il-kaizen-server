@@ -9,6 +9,8 @@ module.exports = function(req, res, next) {
     req.user = verified;
     next();
   } catch (error) {
+  	
     res.json({ error: true, message: 'Invalid Token!' });
+    
   }
 };

@@ -125,7 +125,9 @@ router.get('/alls', async (req, res) => {
   try {
     const payment = await Payment.find();
     if (payment.length > 0) {
-      return res.status(200).json({ error: null, payment: payment });
+      return res.status(200).json({ 
+        error: null, 
+        payment: payment });
     } else {
       return res.status(404).json({
         error: true,

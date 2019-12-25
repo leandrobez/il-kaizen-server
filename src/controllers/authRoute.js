@@ -34,7 +34,10 @@ router.post('/register', async (req, res) => {
 
   try {
     const savedUser = await user.save();
-    return res.status(201).json({ error: null, user: user._id });
+    return res.status(201).json(
+      { error: null, 
+        user: user._id 
+      });
   } catch (error) {
     res.status(400).json({
       error: true,
@@ -52,7 +55,9 @@ router.get('/show/:_id', async (req, res) => {
     const user = await User.findById({ _id: req.params._id });
     if (user) {
       user.password = undefined;
-      return res.status(200).json({ error: null, user: user });
+      return res.status(200).json({ 
+        error: null, 
+        user: user });
     } else {
       return res.status(404).json({
         error: true,
@@ -87,7 +92,10 @@ router.get('/alls', async (req, res) => {
           email: user.email
         });
       });
-      return res.status(200).json({ error: null, userNoPwd: userNoPwd });
+      return res.status(200).json({ 
+        error: null, 
+        userNoPwd: userNoPwd 
+      });
     } else {
       return res.status(404).json({
         error: true,

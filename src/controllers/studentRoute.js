@@ -312,7 +312,9 @@ router.get('/show/:_id', async (req, res) => {
   try {
     const student = await Student.findById({ _id: req.params._id });
     if (student) {
-      return res.status(200).json({ error: null, student: student });
+      return res.status(200).json({ 
+        error: null, 
+        student: student });
     } else {
       return res.status(404).json({
         error: true,
@@ -360,7 +362,9 @@ router.get('/alls', async (req, res) => {
   try {
     const student = await Student.find().sort({ name: 1 });
     if (student.length > 0) {
-      return res.status(200).json({ error: null, student: student });
+      return res.status(200).json({ 
+        error: null, 
+        student: student });
     } else {
       return res.json({
         error: true,
