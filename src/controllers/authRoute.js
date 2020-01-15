@@ -9,6 +9,7 @@ router.use(authMiddleware);
 console.log('⚙️ Create all routes to users');
 //register user
 router.post('/register', async (req, res) => {
+  
   const { error } = registerValidation(req.body);
   if (error)
     return res.status(400).json({
@@ -21,7 +22,7 @@ router.post('/register', async (req, res) => {
   //check if the user is already in the database
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist)
-    return res.status(403).json({ error: 'Email already exists' });
+    return res.status(404).json({ error: 'Email already exists' });
   //Hash passwoards
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -106,7 +107,7 @@ router.get('/alls', async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(401).json({
+    res.status(404).json({
       error: true,
       message: {
         type: 'warning',
@@ -117,37 +118,37 @@ router.get('/alls', async (req, res) => {
 });
 
 //update admin
-router.put('/update/:_id', async (req, res) => {
+router.put('/update/:id', async (req, res) => {
+  const data = req.body;
   try {
-    const user = await User.findById({ _id: req.params._id });
-    if (user) {
-      user.password = undefined;
-      return res.status(200).json({ error: null, user: user });
+    const admin = await User.updateOne({ _id: req.params.id }, { $set: data });
+    if (admin) {
+      return res.status(200).json({
+        error: false,
+        message: { type: 'success', value: 'Atualização feita com sucesso!' }
+      });
     } else {
       return res.status(404).json({
         error: true,
         message: {
           type: 'warning',
-          value: 'Não foi encontrodo um administrador com esse ID.'
+          value: 'Não foi possível atualizar o aluno com o presente ID'
         }
       });
     }
   } catch (error) {
-    res.status(401).json({
-      error: true,
-      message: {
-        type: 'warning',
-        value: 'Você não tem permissão para fazer essa requisição'
-      }
-    });
+    return req
+      .status(404)
+      .json({ error: true, message: { type: 'warning', value: error.errors } });
   }
 });
 
 //remove admin
 router.delete('/remove/:_id', async (req, res) => {
+  
   try {
-    const student = await User.deleteOne({ _id: req.params._id });
-    res.status(403).json({
+    const admin = await User.deleteOne({ _id: req.params._id });
+    return res.status(200).json({
       error: null,
       message: {
         type: 'success',
@@ -155,7 +156,7 @@ router.delete('/remove/:_id', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(404).json({
       error: true,
       message: {
         type: 'danger',

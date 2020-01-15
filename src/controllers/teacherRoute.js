@@ -221,7 +221,7 @@ router.delete('/remove/:_id', async (req, res) => {
         error: false,
         message: {
           type: 'success',
-          value: 'O aluno foi retirado do banco de dados com sucesso!'
+          value: 'O professor foi retirado do banco de dados com sucesso!'
         }
       });
     } else {
@@ -229,7 +229,7 @@ router.delete('/remove/:_id', async (req, res) => {
         error: true,
         message: {
           type: 'warning',
-          value: 'Não foi possível retirar o aluno do banco de dados!'
+          value: 'Não foi possível retirar o professor do banco de dados!'
         }
       });
     }

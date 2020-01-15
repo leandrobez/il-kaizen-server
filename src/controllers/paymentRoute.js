@@ -10,6 +10,7 @@ router.use(authMiddleware);
 console.log('⚙️ Create all routes to payments');
 
 //route register payment -- @postif don´t have any payments
+
 router.post('/create', async (req, res) => {
   const { error } = paymentRegisterValidation(req.body);
 
@@ -18,7 +19,19 @@ router.post('/create', async (req, res) => {
       error: true,
       message: { type: 'warning', value: error.details[0].message }
     });
-
+  if (
+    req.body.students[0].sendMessage == undefined &&
+    req.body.students[0].sendReceipt == undefined
+  ) {
+    req.body.students[0].sendMessage,
+      (req.body.students[0].sendReceipt = false);
+  }
+  if (req.body.students[0].sendMessage == undefined) {
+    req.body.students[0].sendMessage;
+  }
+  if (req.body.students[0].sendReceipt == undefined) {
+    req.body.students[0].sendReceipt = false;
+  }
   let students = {
     studentID: req.body.students[0].studentID,
     studentName: req.body.students[0].studentName,
@@ -29,16 +42,18 @@ router.post('/create', async (req, res) => {
     sendMessage: req.body.students[0].sendMessage,
     sendReceipt: req.body.students[0].sendReceipt
   };
+
   //check if the user payed current month
   const payed = await Payment.findOne({ month: req.body.month });
   if (payed && payed.students.length > 0) {
     const userPayed = payed.students.filter(
-      student => student.studentID == req.body.students[0].studentID
+      student => student.studentID == students.studentID
     );
     //find student
-    if (userPayed.length == 1) {
+
+    if (userPayed.length > 0) {
       //res.status(204);
-      return res.json({
+      return res.status(204).json({
         error: true,
         message: {
           type: 'warning',
@@ -48,10 +63,11 @@ router.post('/create', async (req, res) => {
     }
     //new student pay to current month
     payed.students.push(students);
+    const payment = await Payment.updateOne({ _id: payed._id }, payed);
 
-    res.json({
+    return res.status(201).json({
       error: null,
-      payment: payed
+      payment: payment
     });
   } else {
     //first payment to month
@@ -70,6 +86,41 @@ router.post('/create', async (req, res) => {
         message: { type: 'warning', value: error.errors }
       });
     }
+  }
+});
+
+//remove payment for one student
+router.delete('/remove/:id/:student', async (req, res) => {
+  try {
+    
+    const payment = await Payment.find({ _id: req.params.id });
+  
+   if (payment.length > 0) {
+      let students = payment[0].students
+      let updateStudents = students.splice(0,1);
+      const newPayment = await Payment.updateOne({ _id: req.params.id },updateStudents);
+      if (newPayment) {
+        return res.status(200).json({
+          error: false,
+          message: {
+            type: 'success',
+            value: 'O pagamento do aluno foi retirado do banco de dados com sucesso!'
+          }
+        });
+      } else {
+        return res.status(404).json({
+          error: true,
+          message: {
+            type: 'warning',
+            value: 'Não foi possível fazer a atualização com esse ID'
+          }
+      });
+      }
+    }
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: true, message: { type: 'warning', value: error.errors } });
   }
 });
 
@@ -100,8 +151,12 @@ router.get('/show/:_id', async (req, res) => {
 router.get('/show/month/:m', async (req, res) => {
   try {
     const payment = await Payment.find({ month: req.params.m });
+
     if (payment.length > 0) {
-      res.status(200).json({ error: null, payment: payment });
+      return res
+        .status(200)
+        .json({ error: null, payment: payment });
+        //.json({ error: null, payment: payment[0].students });
     } else {
       return res.status(201).json({
         error: true,
@@ -116,7 +171,7 @@ router.get('/show/month/:m', async (req, res) => {
         value: 'Você não tem permissão para fazer essa requisição'
       }
     });
-    console.log(error, req);
+    //   console.log(error, req);
   }
 });
 
@@ -125,9 +180,10 @@ router.get('/alls', async (req, res) => {
   try {
     const payment = await Payment.find();
     if (payment.length > 0) {
-      return res.status(200).json({ 
-        error: null, 
-        payment: payment });
+      return res.status(200).json({
+        error: null,
+        payment: payment
+      });
     } else {
       return res.status(404).json({
         error: true,

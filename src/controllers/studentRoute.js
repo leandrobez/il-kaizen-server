@@ -279,10 +279,10 @@ router.post('/create', async (req, res) => {
   }
 });
 
-//remove student
-router.delete('/remove/:_id', async (req, res) => {
+//remove  one student
+router.delete('/remove/:_id/', async (req, res) => {
   try {
-    const student = await Student.deleteOne({ _id: req.params._id });
+    const student = await Student.deleteOne({ _id: req.params._id });   
     if (student) {
       return res.status(200).json({
         error: false,
