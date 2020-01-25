@@ -108,12 +108,12 @@ const studentSchema = Schema(
         },
         fone: {
           type: String,
-          default: '51 3333-3333',
+          default: '5133333333',
           max: 12
         },
         clr: {
           type: String,
-          default: '51 99999-9999',
+          default: '51999999999',
           max: 13
         }
       }

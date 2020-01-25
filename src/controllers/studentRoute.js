@@ -271,7 +271,11 @@ router.post('/create', async (req, res) => {
 
   try {
     const savedStudent = await student.save();
-    res.status(201).json({ student: student._id });
+    
+    return res.status(201).json(
+      { error: null, 
+        student: student._id 
+      });
   } catch (error) {
     res
       .status(400)
