@@ -9,7 +9,6 @@ router.use(authMiddleware);
 console.log('⚙️ Create all routes to users');
 //register user
 router.post('/register', async (req, res) => {
-  
   const { error } = registerValidation(req.body);
   if (error)
     return res.status(400).json({
@@ -22,7 +21,13 @@ router.post('/register', async (req, res) => {
   //check if the user is already in the database
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist)
-    return res.status(404).json({ error: 'Email already exists' });
+    return res.status(404).json({ 
+      error: true,
+      message: {
+        type: 'warning',
+        value: 'Email already exists'
+      }
+     });
   //Hash passwoards
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -35,10 +40,7 @@ router.post('/register', async (req, res) => {
 
   try {
     const savedUser = await user.save();
-    return res.status(201).json(
-      { error: null, 
-        user: user._id 
-      });
+    return res.status(201).json({ error: null, user: user._id });
   } catch (error) {
     res.status(400).json({
       error: true,
@@ -56,9 +58,10 @@ router.get('/show/:_id', async (req, res) => {
     const user = await User.findById({ _id: req.params._id });
     if (user) {
       user.password = undefined;
-      return res.status(200).json({ 
-        error: null, 
-        user: user });
+      return res.status(200).json({
+        error: null,
+        user: user
+      });
     } else {
       return res.status(404).json({
         error: true,
@@ -93,16 +96,16 @@ router.get('/alls', async (req, res) => {
           email: user.email
         });
       });
-      return res.status(200).json({ 
-        error: null, 
-        userNoPwd: userNoPwd 
+      return res.status(200).json({
+        error: null,
+        userNoPwd: userNoPwd
       });
     } else {
       return res.status(404).json({
         error: true,
         message: {
           type: 'warning',
-          value: 'Você não tem permissão para fazer essa requisição'
+          value: 'Não há nenhum administrador cadastrado no Banco de Dados'
         }
       });
     }
@@ -110,8 +113,8 @@ router.get('/alls', async (req, res) => {
     res.status(404).json({
       error: true,
       message: {
-        type: 'warning',
-        value: 'Você não tem permissão para fazer essa requisição'
+        type: 'danger',
+        value: error
       }
     });
   }
@@ -145,7 +148,6 @@ router.put('/update/:id', async (req, res) => {
 
 //remove admin
 router.delete('/remove/:_id', async (req, res) => {
-  
   try {
     const admin = await User.deleteOne({ _id: req.params._id });
     return res.status(200).json({

@@ -4,15 +4,18 @@ const dotenv = require('dotenv');
 //initialize dotenv
 dotenv.config();
 
-mongoose.connect(process.env.DB_CONNECT, 
-	{ 
-		useNewUrlParser: true,
-		useUnifiedTopology: true 
-	}, () => {
-  console.log(
-    `*****************************\n*    DB Connection: OK    *\n*****************************\n`
-  );
-});
+mongoose.connect(
+  process.env.DB_CONNECT,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  },
+  () => {
+    console.log(
+      `*****************************\n*    DB Connection: OK    *\n*****************************\n`
+    );
+  }
+);
 
 mongoose.connection.on('error', () => {
   console.error.bind(

@@ -27,9 +27,9 @@ let port = process.env.PORT || 4000;
 app.listen(port, () => {
   // Prints initialization
   console.log('******************************');
-  console.log('*    Ap starting...');
-  console.log('*    Ap run with ' + process.env.NODE_ENV);
-  console.log('*    Il Kaizen Finances');
+  console.log('*    App starting...');
+  console.log('*    App run with ' + process.env.NODE_ENV);
+  console.log('*    Il Kaizen Server');
   console.log('*    By InternetLojas.com');
   console.log(`*    Port: ${port}`);
   console.log('*    Database: MongoDB');

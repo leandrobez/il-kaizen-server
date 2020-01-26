@@ -226,6 +226,42 @@ const userRegisterValidation = data => {
   return Joi.validate(data, checkSchema);
 };
 
+//cronogram
+const cronogramValidation = data => {
+  const checkSchema = {
+    teacher: Joi.string()
+      .required()
+      .min(4)
+      .max(255),
+    contents: Joi.array().items(
+      Joi.object({
+        month: Joi.string()
+          .required()
+          .min(3),
+        schedule: Joi.array().items(
+          Joi.object({
+            day: Joi.string()
+              .required()
+              .min(2),
+            events: Joi.array().items({
+              students: Joi.array().length(1),
+              details: {
+                timeKey: Joi.number().required(),
+                start: Joi.string().required(),
+                end: Joi.string().required(),
+                class: Joi.string()
+                  .required()
+                  .min(3)
+              }
+            })
+          })
+        )
+      })
+    )
+  };
+  return Joi.validate(data, checkSchema);
+};
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.studentRegisterValidation = studentRegisterValidation;
@@ -234,3 +270,4 @@ module.exports.paymentRegisterValidation = paymentRegisterValidation;
 module.exports.expensesRegisterValidation = expensesRegisterValidation;
 module.exports.isValidCPF = isValidCPF;
 module.exports.userRegisterValidation = userRegisterValidation;
+module.exports.cronogramValidation = cronogramValidation;
