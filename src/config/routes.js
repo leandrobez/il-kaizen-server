@@ -7,6 +7,7 @@ const authenticateRoute = require('../controllers/authenticateRoute'),
   teacherRoute = require('../controllers/teacherRoute'),
   paymentRoute = require('../controllers/paymentRoute'),
   cronogramRoute = require('../controllers/cronogramRoute'),
+  evaliationRoute = require('../controllers/evaliationRoute'),
   fixedRoute = require('../controllers/fixedRoute'),
   extraRoute = require('../controllers/extraRoute'),
   variableRoute = require('../controllers/variableRoute');
@@ -24,6 +25,7 @@ module.exports = app => {
     .use(pathRoute + 'teacher', teacherRoute)
     .use(pathRoute + 'payment', paymentRoute)
     .use(pathRoute + 'cronogram', cronogramRoute)
+    .use(pathRoute + 'evaliation', evaliationRoute)
     .use(pathRoute + 'expenses/fixed', fixedRoute)
     .use(pathRoute + 'expenses/extra', extraRoute)
     .use(pathRoute + 'expenses/variable', variableRoute);
