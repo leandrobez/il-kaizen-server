@@ -13,25 +13,22 @@ console.log('⚙️ Create all routes to payments');
 
 router.post('/create', async (req, res) => {
   const { error } = paymentRegisterValidation(req.body);
-
   if (error)
     return res.status(400).json({
       error: true,
-      message: { type: 'warning', value: error.details[0].message }
+      message: {
+        type: 'warning',
+        value: error.details[0].message
+      }
     });
   if (
     req.body.students[0].sendMessage == undefined &&
     req.body.students[0].sendReceipt == undefined
   ) {
-    req.body.students[0].sendMessage,
-      (req.body.students[0].sendReceipt = false);
-  }
-  if (req.body.students[0].sendMessage == undefined) {
-    req.body.students[0].sendMessage;
-  }
-  if (req.body.students[0].sendReceipt == undefined) {
+    req.body.students[0].sendMessage = false;
     req.body.students[0].sendReceipt = false;
   }
+ 
   let students = {
     studentID: req.body.students[0].studentID,
     studentName: req.body.students[0].studentName,
@@ -67,7 +64,7 @@ router.post('/create', async (req, res) => {
 
     return res.status(201).json({
       error: null,
-      payment: payment
+      payment: payment._id
     });
   } else {
     //first payment to month
@@ -79,7 +76,10 @@ router.post('/create', async (req, res) => {
 
     try {
       const savedPayment = await payment.save();
-      res.status(201).json({ error: null, payment: payment._id });
+      res.status(201).json({
+        error: null,
+        payment: payment._id
+      });
     } catch (error) {
       res.status(400).json({
         error: true,
@@ -92,19 +92,22 @@ router.post('/create', async (req, res) => {
 //remove payment for one student
 router.delete('/remove/:id/:student', async (req, res) => {
   try {
-    
     const payment = await Payment.find({ _id: req.params.id });
-  
-   if (payment.length > 0) {
-      let students = payment[0].students
-      let updateStudents = students.splice(0,1);
-      const newPayment = await Payment.updateOne({ _id: req.params.id },updateStudents);
+
+    if (payment.length > 0) {
+      let students = payment[0].students;
+      let updateStudents = students.splice(0, 1);
+      const newPayment = await Payment.updateOne(
+        { _id: req.params.id },
+        updateStudents
+      );
       if (newPayment) {
         return res.status(200).json({
           error: false,
           message: {
             type: 'success',
-            value: 'O pagamento do aluno foi retirado do banco de dados com sucesso!'
+            value:
+              'O pagamento do aluno foi retirado do banco de dados com sucesso!'
           }
         });
       } else {
@@ -114,7 +117,7 @@ router.delete('/remove/:id/:student', async (req, res) => {
             type: 'warning',
             value: 'Não foi possível fazer a atualização com esse ID'
           }
-      });
+        });
       }
     }
   } catch (error) {
@@ -153,10 +156,10 @@ router.get('/show/month/:m', async (req, res) => {
     const payment = await Payment.find({ month: req.params.m });
 
     if (payment.length > 0) {
-      return res
-        .status(200)
-        .json({ error: null, payment: payment });
-        //.json({ error: null, payment: payment[0].students });
+      return res.status(200).json({
+        error: null,
+        payment: payment
+      });
     } else {
       return res.status(201).json({
         error: true,
