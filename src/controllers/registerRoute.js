@@ -13,18 +13,8 @@ console.log('⚙️ Create all routes to register');
 //register
 router.post('/create', async (req, res) => {
   let registration = {
-    student: req.body.student,
-    name: req.body.name,
-    vezes: req.body.vezes,
-    valor: req.body.valor,
-    class: req.body.class,
+    studentID: req.body.studentID,
     teacher: req.body.teacher,
-    obs: req.body.obs,
-    sendmsg: req.body.sendmsg,
-    desc: {
-      perc: req.body.desc.perc,
-      abs: req.body.desc.abs
-    },
     schedule: req.body.schedule
   };
 
@@ -38,18 +28,8 @@ router.post('/create', async (req, res) => {
 
   //if all is ok create new Student
   let newRegister = {
-    student: registration.student,
-    name: registration.name,
-    vezes: registration.vezes,
-    valor: registration.valor,
-    class: registration.class,
+    studentID: registration.studentID,
     teacher: registration.teacher,
-    obs: registration.obs,
-    sendmsg: registration.sendmsg,
-    desc: {
-      perc: registration.desc.perc,
-      abs: registration.desc.abs
-    },
     schedule: registration.schedule
   };
 
@@ -57,7 +37,9 @@ router.post('/create', async (req, res) => {
 
   try {
     const savedRegister = await register.save();
-    res.status(201).json({ register: register._id });
+    res.status(201).json({ 
+      error: null,
+      register: register._id });
   } catch (error) {
     res
       .status(400)

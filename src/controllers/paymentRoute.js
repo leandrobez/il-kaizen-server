@@ -152,6 +152,7 @@ router.get('/show/:_id', async (req, res) => {
 
 //route search payment month -- @get
 router.get('/show/month/:m', async (req, res) => {
+  //console.log(req.params.m)
   try {
     const payment = await Payment.find({ month: req.params.m });
 

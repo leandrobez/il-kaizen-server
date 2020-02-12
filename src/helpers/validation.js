@@ -195,30 +195,15 @@ const expensesRegisterValidation = data => {
 //register
 const userRegisterValidation = data => {
   const checkSchema = {
-    student: Joi.string().required(),
-    name: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
-    vezes: Joi.number().required(),
-    valor: Joi.number().required(),
-    class: Joi.string()
-      .min(4)
-      .max(255)
-      .required(),
+    studentID: Joi.string().required(),
     teacher: Joi.string()
       .min(4)
       .max(255)
       .required(),
-    obs: Joi.string(),
-    sendmsg: Joi.boolean(),
-    desc: {
-      perc: Joi.number(),
-      abs: Joi.number()
-    },
     schedule: Joi.array().items(
       Joi.object({
         day: Joi.string().required(),
+        class: Joi.string().required(),
         start: Joi.string().required()
       })
     )

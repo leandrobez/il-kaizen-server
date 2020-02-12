@@ -34,7 +34,13 @@ module.exports = (req, res, next) => {
       req.userID = decoded.id;
       next();
     } catch (error) {
-      return res.status(400).json({ error: error.errors });
+      return res.status(400).json({ 
+        error: true,
+        message: {
+          type: 'danger',
+          message: error.errors
+        } 
+      });
     }
   });
 };
