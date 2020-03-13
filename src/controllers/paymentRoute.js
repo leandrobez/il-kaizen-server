@@ -25,23 +25,23 @@ router.post('/create', async (req, res) => {
     req.body.students[0].sendMessage == undefined &&
     req.body.students[0].sendReceipt == undefined
   ) {
-    req.body.students[0].sendMessage = false;
-    req.body.students[0].sendReceipt = false;
+    req.body.students[0].sendMessage = '';
+    req.body.students[0].sendReceipt = '';
   }
- 
+ const data = req.body;
   let students = {
-    studentID: req.body.students[0].studentID,
-    studentName: req.body.students[0].studentName,
-    datePayment: req.body.students[0].datePayment,
-    amountPayment: req.body.students[0].amountPayment,
-    formPayment: req.body.students[0].formPayment,
-    obs: req.body.students[0].obs,
-    sendMessage: req.body.students[0].sendMessage,
-    sendReceipt: req.body.students[0].sendReceipt
+    studentID: data.students[0].studentID,
+    studentName: data.students[0].studentName,
+    datePayment: data.students[0].datePayment,
+    amountPayment: data.students[0].amountPayment,
+    formPayment: data.students[0].formPayment,
+    obs: data.students[0].obs,
+    sendMessage: data.students[0].sendMessage,
+    sendReceipt: data.students[0].sendReceipt
   };
 
   //check if the user payed current month
-  const payed = await Payment.findOne({ month: req.body.month });
+  const payed = await Payment.findOne({ month: data.month });
   if (payed && payed.students.length > 0) {
     const userPayed = payed.students.filter(
       student => student.studentID == students.studentID
@@ -70,7 +70,7 @@ router.post('/create', async (req, res) => {
     //first payment to month
     //create a new Payment
     const payment = new Payment({
-      month: req.body.month,
+      month: data.month,
       students: [students]
     });
 
@@ -96,7 +96,8 @@ router.delete('/remove/:id/:student', async (req, res) => {
 
     if (payment.length > 0) {
       let students = payment[0].students;
-      let updateStudents = students.splice(0, 1);
+      let indexStudent = students.findIndex(student => student._id == req.params.student)
+      let updateStudents = students.splice(indexStudent, 1);
       const newPayment = await Payment.updateOne(
         { _id: req.params.id },
         updateStudents
@@ -183,7 +184,7 @@ router.get('/show/month/:m', async (req, res) => {
 router.get('/alls', async (req, res) => {
   try {
     const payment = await Payment.find();
-    if (payment.length > 0) {
+    if (payment.length) {
       return res.status(200).json({
         error: null,
         payment: payment
@@ -211,9 +212,39 @@ router.get('/alls', async (req, res) => {
 
 //route update --@put
 router.put('/update/:_id', async (req, res) => {
+  const { error } = paymentRegisterValidation(req.body);
+  if (error)
+    return res.status(400).json({
+      error: true,
+      message: {
+        type: 'warning',
+        value: error.details[0].message
+      }
+    });
+  if (
+    req.body.sendMessage == undefined &&
+    req.body.sendReceipt == undefined
+  ) {
+    req.body.sendMessage = '';
+    req.body.sendReceipt = '';
+  }
   const data = req.body;
+  let students = {
+    studentID: data.studentID,
+    studentName: data.studentName,
+    datePayment: data.datePayment,
+    amountPayment: data.amountPayment,
+    formPayment: data.formPayment,
+    obs: data.obs,
+    sendMessage: data.sendMessage,
+    sendReceipt: data.sendReceipt
+  };
+  let updatePayment = {
+    month: data.month,
+    students: [students]
+  }
   try {
-    const payment = await Payment.updateOne({ _id: req.params._id }, data);
+    const payment = await Payment.updateOne({ _id: req.params._id }, updatePayment);
 
     if (payment) {
       return res.status(200).json({

@@ -9,18 +9,24 @@ console.log('⚙️ Create all routes to autenticate');
 //login to dashboad
 router.post('/login', async (req, res) => {
   //The data will be validate before request
+
   const { error } = loginValidation(req.body);
+
   if (error) {
     //console.log(error)
     return res.json({
       error: true,
-      message: { type: 'warning', value: error.details[0].message }
+      message: { 
+        type: 'warning', 
+        value: error.details[0].message
+       }
     });
   }
   //check if the user is already in the database
   const user = await User.findOne({ email: req.body.email });
+
   if (!user) {
-    return res.json({
+    return res.status(400).json({
       error: true,
       message: { type: 'warning', value: 'This email is wrong' }
     });
@@ -37,9 +43,16 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
     expiresIn: '3600s'
   });
-  res
+ 
+  return res
     .status(200)
-    .json({ error: null, user: { name: user.name, token: token } });
+    .json({ 
+      error: null, 
+      user: { 
+        name: user.name, 
+        token: token 
+      } 
+    });
 });
 
 //logout

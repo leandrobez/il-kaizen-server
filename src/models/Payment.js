@@ -35,12 +35,12 @@ const paymentSchema = Schema({
         type: String
       },
       sendMessage: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: ''
       },
       sendReceipt: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: ''
       }
     }
   }

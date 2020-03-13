@@ -176,6 +176,20 @@ const paymentRegisterValidation = data => {
   return Joi.validate(data, checkSchema);
 };
 
+//check validation
+const checkValidation = data => {
+  const Schema = {
+    paymentID: Joi.required(),
+    studentID: Joi.required(),
+    bank: Joi.string().max(24).required(),
+    numberCheck: Joi.string().required(),
+    amountCheck: Joi.float().required(),
+    targetCheck: Joi.string().required()
+  }
+
+  return Joi.validate(data, Schema)
+}
+
 //expenses validation
 const expensesRegisterValidation = data => {
   const checkSchema = {
@@ -254,5 +268,6 @@ module.exports.teacherRegisterValidation = teacherRegisterValidation;
 module.exports.paymentRegisterValidation = paymentRegisterValidation;
 module.exports.expensesRegisterValidation = expensesRegisterValidation;
 module.exports.isValidCPF = isValidCPF;
+module.exports.checkValidation = checkValidation;
 module.exports.userRegisterValidation = userRegisterValidation;
 module.exports.cronogramValidation = cronogramValidation;

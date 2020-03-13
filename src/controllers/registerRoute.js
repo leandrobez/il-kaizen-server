@@ -26,7 +26,7 @@ router.post('/create', async (req, res) => {
       message: { type: 'warning', value: error.details[0].message }
     });
 
-  //if all is ok create new Student
+  //if all is ok create new Register
   let newRegister = {
     studentID: registration.studentID,
     teacher: registration.teacher,

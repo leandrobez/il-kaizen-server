@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
     const savedUser = await user.save();
     return res.status(201).json({ error: null, user: user._id });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: true,
       message: {
         type: 'danger',
@@ -72,7 +72,7 @@ router.get('/show/:_id', async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: true,
       message: {
         type: 'warning',
@@ -110,7 +110,7 @@ router.get('/alls', async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(404).json({
+    return res.status(404).json({
       error: true,
       message: {
         type: 'danger',
