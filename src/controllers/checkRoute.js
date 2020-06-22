@@ -36,13 +36,14 @@ router.post('/create', async (req, res) => {
         check: check._id 
       });
   } catch (error) {
-    return res.status(400).send({
-      error: true,
-      message: {
-        type: 'warning',
-        value: error.errors
-      }
-    });
+    return res.status(400)
+      .json({ 
+        error: true, 
+        message: { 
+          type: 'warning', 
+          value: error.errors 
+        } 
+      });
   }
 });
 

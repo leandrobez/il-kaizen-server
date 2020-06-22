@@ -9,6 +9,7 @@ const authenticateRoute = require('../controllers/authenticateRoute'),
   checkRoute = require('../controllers/checkRoute'),
   cronogramRoute = require('../controllers/cronogramRoute'),
   evaliationRoute = require('../controllers/evaliationRoute'),
+  anamneseRoute = require('../controllers/anamneseRoute'),
   fixedRoute = require('../controllers/fixedRoute'),
   extraRoute = require('../controllers/extraRoute'),
   variableRoute = require('../controllers/variableRoute');
@@ -28,6 +29,7 @@ module.exports = app => {
     .use(pathRoute + 'check', checkRoute)
     .use(pathRoute + 'cronogram', cronogramRoute)
     .use(pathRoute + 'evaliation', evaliationRoute)
+    .use(pathRoute + 'anamnese', anamneseRoute)
     .use(pathRoute + 'expenses/fixed', fixedRoute)
     .use(pathRoute + 'expenses/extra', extraRoute)
     .use(pathRoute + 'expenses/variable', variableRoute);
